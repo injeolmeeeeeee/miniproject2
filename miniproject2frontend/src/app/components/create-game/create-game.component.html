@@ -1,0 +1,30 @@
+<html>
+<body>
+  <button (click)="back()" style="position: absolute; top: 20px; left: 20px; padding: 5px;">BACK</button>
+  <br>
+  <br>
+  <app-google-signin (loginWithGoogle)="googleSignin($event)"></app-google-signin>
+  <h2>Choose Category:</h2>
+  <div class="card-container">
+    <div class="card" *ngFor="let e of edition" (click)="onSelectEdition(e)" [class.selected]="selectedEdition === e">
+      <div class="card-body">
+        <h5 class="card-title">{{ e }}</h5>
+      </div>
+    </div>
+  </div>
+  <br>
+  <button (click)="createGame()">Generate Game Code</button>
+  <br>
+  <br>
+  <h2>GAME CODE:</h2>
+  <br>
+  <h1 class="normal-case">{{ gameCode }}</h1>
+  <p>Game code is case sensitive</p>
+  <br>
+  <button (click)="share()">SHARE CODE WITH YOUR FRIENDS VIA TELEGRAM</button>
+  <br>
+  <br>
+
+  <button [disabled]="!gameCode" (click)="next()">ENTER NEW GAME</button>
+</body>
+</html>

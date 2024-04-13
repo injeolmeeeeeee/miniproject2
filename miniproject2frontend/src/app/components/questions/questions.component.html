@@ -1,0 +1,30 @@
+<div *ngIf="currentQuestion">
+  <div class="card">
+    <div class="card-body">
+      <p class="card-footer">LEVEL {{ currentQuestion.level }} ({{ currentQuestion.category }})</p>
+      <br>
+      <p class="card-text">{{ currentQuestion.questionText }}</p>
+      <p class="card-footer">{{ currentQuestion.edition }}</p>
+      <br>
+    </div>
+  </div>
+
+  <label for="userResponse">Your response:</label>
+  <br>
+  <br>
+  <form #responseForm="ngForm">
+    <div class="form-group">
+      <textarea rows="2" [(ngModel)]="userResponse" name="userResponse" id="userResponse" class="form-control" required></textarea>
+      <div *ngIf="responseForm.invalid && (responseForm.dirty || responseForm.touched)" class="error">
+        <div *ngIf="responseForm.errors?.['required']">
+          Please type in your answer
+        </div>
+      </div>
+    </div>
+    <br>
+    <button [disabled]="!responseForm.valid" (click)="submit()">Submit</button>
+  </form>
+</div>
+<div *ngIf="!currentQuestion">
+  <p>Loading question...</p>
+</div>

@@ -1,0 +1,29 @@
+<body>
+    <button (click)="back()" style="position: absolute; top: 20px; left: 20px; padding: 5px;">BACK</button>
+    <br>
+    <br>
+    <h2><label for="playerName">Enter Your Name:</label></h2>
+    <input type="text" id="playerName" [(ngModel)]="playerName" name="playerName" required #playerNameInput="ngModel">
+    <br>
+    <br>
+    <div *ngIf="playerNameInput.invalid && (playerNameInput.dirty || playerNameInput.touched)" class="error">
+        <div *ngIf="playerNameInput.errors?.['required']">
+            Player Name is required.
+        </div>
+    </div>
+    <br>
+    <h2>ENTER GAME CODE:</h2>
+    <input type="text" [(ngModel)]="gameId" name="gameCode" required #gameCodeInput="ngModel">
+    <div *ngIf="gameCodeInput.invalid && (gameCodeInput.dirty || gameCodeInput.touched)" class="error">
+        <br><div *ngIf="gameCodeInput.errors?.['required']">
+            Game Code is required.
+        </div>
+    </div>
+    <br>
+    <br>
+    <div *ngIf="errorMessage" class="error">
+        {{ errorMessage }}
+    </div>
+    <br>
+    <button [disabled]="!playerNameInput.valid || !gameCodeInput.valid" (click)="joinGame()">JOIN GAME</button>
+</body>

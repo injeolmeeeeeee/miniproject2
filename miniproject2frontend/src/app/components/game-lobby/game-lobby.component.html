@@ -1,0 +1,14 @@
+<body>
+    <h1>WELCOME</h1>
+    <p class="normal-case">GAME SESSION: {{ gameCode }}</p>
+    <br>
+    <h2>PLAYERS</h2>
+    <div>
+        <ul>
+            <li *ngFor="let player of players">{{ player.name }}</li>
+        </ul>
+    </div>
+    <br>
+    <button *ngIf="isAdmin" (click)="start()">START GAME</button>
+    <!-- <button (click)="start()">START GAME</button> -->
+</body>
