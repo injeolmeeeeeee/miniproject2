@@ -25,7 +25,7 @@ import vttp.nus.miniproject2.models.Question;
 // import vttp.nus.miniproject2.repositories.QuestionRepository;
 import vttp.nus.miniproject2.services.PlayerService;
 import vttp.nus.miniproject2.services.QuestionService;
-import vttp.nus.miniproject2.services.QuotesService;
+// import vttp.nus.miniproject2.services.QuotesService;
 
 @Component
 public class WebSocketHandler extends TextWebSocketHandler {
@@ -38,8 +38,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Autowired
     private PlayerService playerService;
 
-    @Autowired
-    private QuotesService quotesService;
+    // @Autowired
+    // private QuotesService quotesService;
 
     // @Autowired
     // private QuestionRepository questionRepository;
@@ -57,7 +57,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
             String gameId = messageNode.path("gameId").asText();
             String messageContent = messageNode.path("content").asText();
             // String messageType = messageNode.path("type").asText();
-            String playerName = messageNode.path("playerName").asText();
+            // String playerName = messageNode.path("playerName").asText();
 
             switch (messageContent) {
                 case "start_game":
@@ -69,12 +69,11 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 case "response_submit":
                     handleResponseEvent(session, gameId);
                     break;
-                case "next_question":
+                case "new_round":
                     handleNewRoundEntered(gameId);
                     break;
                 case "end":
                     handleResponseEvent(session, gameId);
-                    handleEnd(session, gameId);
                     break;
                 default:
                     logger.warn("Received unrecognized message content: {}", messageContent);
@@ -86,7 +85,9 @@ public class WebSocketHandler extends TextWebSocketHandler {
     }
 
     public void handleNewRoundEntered(String gameId) {
-        playerService.clearPlayerResponses(gameId);
+        // playerService.clearPlayerResponses(gameId);
+        String message = "{\"type\": \"next_question\", \"content\": \"\"}";
+        broadcastMessage(message);
     }
 
     private String extractGameIdFromURI(URI uri) {
@@ -228,18 +229,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
             }
         } else {
             logger.warn("Session {} is closed", session.getId());
-        }
-    }
-
-    private void handleEnd(WebSocketSession session, String gameId) throws JsonProcessingException {
-        Player player = (Player) session.getAttributes().get("player");
-        if (player != null) {
-            gameSessions.computeIfAbsent(gameId, key -> new ArrayList<>()).add(player);
-            String quote = quotesService.getQuote();
-            String jsonString = objectMapper.writeValueAsString(quote);
-            broadcastMessage(jsonString);
-        } else {
-            logger.warn("No player associated with the session");
         }
     }
 }

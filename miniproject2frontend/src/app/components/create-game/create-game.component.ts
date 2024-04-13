@@ -59,7 +59,7 @@ export class CreateGameComponent implements OnInit, OnDestroy {
 
   share() {
     if (this.gameCode) {
-      var gameUrl = encodeURIComponent('https://your-game-url.com/enter-game/' + this.gameCode);
+      var gameUrl = encodeURIComponent('https://wrns.up.railway.app/enter-game/' + this.gameCode);
       var message = encodeURIComponent('WRNS: JOIN ME');
       var deepLinkUrl = 'https://telegram.me/share/url?url=' + gameUrl + '&text=' + message;
       window.open(deepLinkUrl);

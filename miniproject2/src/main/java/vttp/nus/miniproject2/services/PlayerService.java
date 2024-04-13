@@ -73,7 +73,7 @@ public class PlayerService {
 		playerRepository.updatePlayerList(gameId, players);
 	}
 
-    public void clearPlayerResponses(String gameId) {
-        playerRepository.clearPlayerResponses(gameId);
-    }
+    // public void clearPlayerResponses(String gameId) {
+    //     playerRepository.clearPlayerResponses(gameId);
+    // }
 }

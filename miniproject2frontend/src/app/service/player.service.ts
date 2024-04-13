@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Player } from '../models';
-import { BehaviorSubject, Observable, catchError } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,6 @@ import { BehaviorSubject, Observable, catchError } from 'rxjs';
 export class PlayerService {
   private apiUrl = 'http://localhost:8080/api/';
 
-  private playerNameSubject = new BehaviorSubject<string>('');
 
   constructor(private http: HttpClient) { }
 

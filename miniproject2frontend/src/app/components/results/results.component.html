@@ -1,26 +1,44 @@
-<div class="container">
+<div class="html">
   <div class="row">
     <div class="col">
-      <h2>Responses</h2>
-      <div class="card-answer-container">
-        <ng-container *ngFor="let player of players">
-          <div class="card-answer">
-            <div class="card-body">
-              <div>
-                <p class="card-answer-name">{{ player.name }}</p>
-                <br>
-                <p *ngIf="player.responses && player.responses.length" class="card-answer-body">{{ player.responses }}</p>
-                <p class="card-footer">scores: {{player.score}}</p>
+      <div *ngIf="currentQuestion">
+        <div class="card">
+          <div class="card-body">
+            <p class="card-footer">LEVEL {{ currentQuestion.level }} ({{ currentQuestion.category }})</p>
+            <br>
+            <p class="card-text">{{ currentQuestion.questionText }}</p>
+            <p class="card-footer">{{ currentQuestion.edition }}</p>
+            <br>
+          </div>
+        </div>
+        <h2>Responses</h2>
+        <div class="card-answer-container">
+          <ng-container *ngFor="let player of players">
+            <div class="card-answer">
+              <div class="card-body">
+                <div>
+                  <p class="card-answer-name">{{ player.name }}</p>
+                  <br>
+                  <p *ngIf="player.responses && player.responses.length" class="card-answer-body">{{
+                    player.responses[player.responses.length - 1] }}</p>
+                  <p class="card-footer">total score: {{ player.score }}</p>
+                </div>
               </div>
             </div>
-          </div>
-        </ng-container>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <button class="btn btn-primary" *ngIf="isAdmin" (click)="redirectToQuestions()">Next Question</button>
+        <br>
+        <br>
+        <button class="btn btn-primary" *ngIf="isAdmin" (click)="goToEnd()">End Game</button>
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col">
-      <button class="btn btn-primary"  *ngIf="isAdmin" (click)="goToEnd()">End Game</button>
-    </div>
-  </div>
-</div>
+  <br>
+  <br>
+  <br>
+  <br>

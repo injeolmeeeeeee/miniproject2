@@ -1,8 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { QuestionStore } from '../question.store';
-import { NextQuestionRequest } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -16,11 +15,10 @@ export class WebSocketService {
   private connectedSubject = new Subject<boolean>();
   private onConnectedSubject: Subject<boolean> = new Subject<boolean>();
   private gameStartSubject: Subject<void> = new Subject<void>();
+  private subscription: Subscription | undefined;
 
   private router = inject(Router);
   private questionStore = inject(QuestionStore);
-
-  private players: { name: string; lastResponse: string; score?: number }[] = [];
 
   constructor() {}
 
@@ -53,12 +51,13 @@ export class WebSocketService {
       console.log('Received message type:', receivedMsg.type);
       console.log('Received message:', receivedMsg);
 
-        if (receivedMsg.type === 'game_start') {
-          this.handleGameStart(this.gameCode, this.playerName);
+        if (receivedMsg.type === 'questions') {
+          this.handleQuestions(receivedMsg.content);
+          console.log(receivedMsg.content)
         } else if (receivedMsg.type === 'player_list') {
           this.receivedMessagesSubject.next(receivedMsg);
-        } else if (receivedMsg.type === 'questions') {
-          this.handleQuestions(receivedMsg.content);
+        } else if (receivedMsg.type === 'game_start') {
+          this.handleGameStart(this.gameCode, this.playerName);
           console.log(receivedMsg.content)
         } else if (receivedMsg.type === 'next_question') {
           this.handleNextQuestionEvent(this.gameCode, this.playerName);
@@ -78,13 +77,22 @@ export class WebSocketService {
   }
 
   private handleGameStart(gameCode: string, playerName: string): void {
-    // this.gameStartSubject.next();
-    this.router.navigate(['/game', gameCode, playerName]);
+    console.log("Handling game start...");
+    
+    this.subscription = this.questionStore.questionsSaved().subscribe(() => {
+      console.log("Navigating to game page...");
+      this.router.navigate(['/game', gameCode, playerName]);
+      console.log("Navigation complete.");
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   public handleNextQuestionEvent(gameCode: string, playerName: string): void {
-    const newRound = 'new_round';
-    this.send(gameCode, newRound);
     this.router.navigate(['/game', gameCode, playerName]);
   }
 
@@ -125,8 +133,8 @@ export class WebSocketService {
   }
 
   public sendNextQuestionEvent(gameId: string, playerName: string): void {
-    const nextQuestionEvent = 'next_question';
-    this.send(gameId, nextQuestionEvent);
+    const newRound = 'new_round';
+    this.send(gameId, newRound);
   }
   
 

@@ -2,8 +2,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { WebSocketService } from '../../service/websocket.service';
-import { Player } from '../../models';
+import { Player, Question } from '../../models';
 import { AdminService } from '../../service/admin.service';
+import { QuestionStore } from '../../question.store';
 
 @Component({
   selector: 'app-results',
@@ -17,18 +18,22 @@ export class ResultsComponent implements OnInit, OnDestroy {
   playerName: string = '';
   currentRound!: number;
   isAdmin: boolean = false;
+  currentQuestion!: Question;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private webSocketService: WebSocketService,
-    private adminSvc: AdminService
+    private adminSvc: AdminService,
+    private questionStore: QuestionStore
   ) {}
 
   ngOnInit(): void {
     this.isAdmin = this.adminSvc.isAdmin;
     this.route.queryParams.subscribe(params => {
       this.currentRound = params['currentRound'];
+      const questionString = params['question'];
+      this.currentQuestion = JSON.parse(questionString);
     });
     
     this.route.paramMap.subscribe(params => {
@@ -36,7 +41,7 @@ export class ResultsComponent implements OnInit, OnDestroy {
       this.playerName = params.get('playerName') || '';
       if (this.gameCode) {
         this.webSocketService.connect(this.gameCode, this.playerName);
-        this.subscription = this.webSocketService.getReceivedMessages().subscribe(message => {
+        this.webSocketService.getReceivedMessages().subscribe(message => {
           console.log('Received messages:', message);
           this.players = [];
           const playerList = message.content;
@@ -64,9 +69,22 @@ export class ResultsComponent implements OnInit, OnDestroy {
   }
 
   redirectToQuestions(): void {
-    this.webSocketService.handleNextQuestionEvent(this.gameCode, this.playerName);
-    this.router.navigate(["session", this.gameCode]);
+    this.deleteDisplayedQuestion()
+    this.webSocketService.sendNextQuestionEvent(this.gameCode, this.playerName);
   }
+  
+  deleteDisplayedQuestion(): void {
+    if (this.currentQuestion) {
+      this.questionStore.deleteQuestion(this.currentQuestion.id)
+        .then(() => {
+          console.log('Deleted displayed question from Dexie.');
+        })
+        .catch(error => {
+          console.error('Error deleting displayed question from Dexie:', error);
+        });
+    }
+  }
+  
 
   goToEnd(): void {
     this.webSocketService.sendEnd(this.gameCode);

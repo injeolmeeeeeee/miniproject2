@@ -1,12 +1,32 @@
 <html>
 <h1>End</h1>
-<p>{{ receivedMessage }}</p>
+<div class="card">
+    <div class="card-body">
+        <div class="card-text">{{ quote }}</div>
+    </div>
+</div>
+<br>
+<div class="card-answer-container">
+    <ng-container *ngFor="let player of players">
+        <div class="card-answer">
+            <div class="card-body">
+                <div>
+                    <p class="card-answer-name">{{ player.name }}</p>
+                    <br>
+                    <p class="card-answer-name">total score: {{ player.score }}</p>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div>
+<br>
 <button [routerLink]="['/start']">NEW GAME</button>
 
-<head>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-</head>
-<a href="#" onclick="signOut();">Sign out</a>
+<br>
+<br>
+
+<button href="#" onclick="signOut();">Sign out</button>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
 <script>
 </script>
 

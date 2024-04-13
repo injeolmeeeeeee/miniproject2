@@ -18,10 +18,10 @@ const routes: Routes = [
   { path: 'create', component: CreateGameComponent },
   { path: 'enter', component: EnterGameComponent }, 
   { path: 'enter/:gameId/:selectedEdition', component: EnterGameComponent },
-  { path: 'game-lobby/:gameId/:playerName', component: GameLobbyComponent },
-  { path: 'game/:gameId/:playerName', component: QuestionsComponent },
-  { path: 'result/:gameId/:playerName', component: ResultsComponent},
-  { path:'end', component: EndingComponent}
+  { path: 'game-lobby/:gameId/:playerName', component: GameLobbyComponent }, //lazy load
+  { path: 'game/:gameId/:playerName', component: QuestionsComponent }, //lazy load
+  { path: 'result/:gameId/:playerName', component: ResultsComponent}, //lazy load
+  { path:'end', component: EndingComponent} //lazy load
 ];
 
 @NgModule({

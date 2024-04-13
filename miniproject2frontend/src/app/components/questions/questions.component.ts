@@ -4,7 +4,6 @@ import { PlayerService } from '../../service/player.service';
 import { Player, Question } from '../../models';
 import { QuestionStore } from '../../question.store';
 import { WebSocketService } from '../../service/websocket.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-questions',
@@ -16,10 +15,9 @@ export class QuestionsComponent implements OnInit {
   playerName: string = '';
   question!: Question;
   userResponse!: string;
-  score: number = 0;
-  currentRound: number = 1; // Initialize currentRound to 1
-  lastDisplayedQuestionNumber: number = 0; // Initialize lastDisplayedQuestionNumber to 0
-  private subscription: Subscription | undefined;
+  score !: number;
+  currentRound: number = 1;
+  lastDisplayedQuestionNumber: number = 0;
   message !: any;
   currentQuestion!: Question;
 
@@ -36,9 +34,7 @@ export class QuestionsComponent implements OnInit {
       this.gameId = params.get('gameId') || '';
       this.playerName = params.get('playerName') || '';
     });
-    this.questionStore.questionsSaved().subscribe(() => {
       this.getNextQuestion();
-    });
   }
 
   getNextQuestion(): void {
@@ -46,12 +42,14 @@ export class QuestionsComponent implements OnInit {
       .then(question => {
         if (question) {
           this.currentQuestion = question;
-          this.lastDisplayedQuestionNumber = question.questionNumber;
+          this.lastDisplayedQuestionNumber++;
+          console.log('Current question:', this.currentQuestion);
         } else {
           console.log('No more questions available for round ' + this.currentRound);
+          this.webSocketService.sendEnd(this.gameId);
         }
       });
-  }
+  }  
 
   goToNextRound(): void {
     this.currentRound++;
@@ -61,6 +59,7 @@ export class QuestionsComponent implements OnInit {
 
   submit(): void {
     this.calculateScore();
+    console.log("scores: ", this.score)
     const player: Player = {
       name: this.playerName,
       responses: [this.userResponse],
@@ -76,7 +75,7 @@ export class QuestionsComponent implements OnInit {
         this.router.navigate(['/result', this.gameId, this.playerName], {
           queryParams: {
             question: questionString,
-            currentRound: this.currentRound
+            currentRound: this.currentRound,
           }
         });
       },
@@ -90,6 +89,5 @@ export class QuestionsComponent implements OnInit {
   calculateScore(): void {
     const words = this.userResponse.split(' ');
     this.score = words.filter(word => word.trim() !== '').length;
-    console.log("scores: ", this.score)
   }
 }

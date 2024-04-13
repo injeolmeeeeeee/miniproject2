@@ -11,6 +11,7 @@ import { AdminService } from '../../service/admin.service';
   styleUrls: ['./game-lobby.component.css']
 })
 export class GameLobbyComponent implements OnInit, OnDestroy {
+  
   gameCode !: string;
   players: any[] = [];
   private subscription: Subscription | undefined;

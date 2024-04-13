@@ -15,17 +15,8 @@ export interface Player {
   responses?: string[];
 }
 
-export interface Response {
-  round: number;
-  response: string;
-}
-
 export interface Game {
   gameId: string;
   edition: string;
   players: Player[];
-}
-
-export interface NextQuestionRequest {
-  type: 'next_question';
 }

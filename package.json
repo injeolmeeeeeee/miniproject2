@@ -3,5 +3,8 @@
     "@abacritt/angularx-social-login": "^2.2.0",
     "@angular/router": "^17.3.2",
     "phaser": "^3.80.1"
+  },
+  "devDependencies": {
+    "uglify-js": "^3.17.4"
   }
 }
