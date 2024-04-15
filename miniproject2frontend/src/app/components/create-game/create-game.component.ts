@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SocialAuthService, } from '@abacritt/angularx-social-login';
+// import { SocialAuthService, } from '@abacritt/angularx-social-login';npm 
 import { GameCodeService } from '../../service/game-code.service';
 import { Router } from '@angular/router';
 import { Game } from '../../models';

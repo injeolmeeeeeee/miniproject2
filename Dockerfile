@@ -9,7 +9,7 @@ COPY miniproject2frontend/angular.json .
 COPY miniproject2frontend/tsconfig.* .
 COPY miniproject2frontend/src src
 
-RUN npm ci && ng build --no-warnings
+RUN npm ci && ng build
 
 # Starting with this Linux server
 FROM maven:3-eclipse-temurin-21 AS sb-builder
@@ -25,7 +25,7 @@ COPY miniproject2/mvnw.cmd .
 COPY miniproject2/pom.xml .
 COPY miniproject2/.mvn .mvn
 COPY miniproject2/src src
-COPY --from=ng-builder /ngapp/dist/miniproject2frontend/ src/main/resources/static
+COPY --from=ng-builder /ngapp/dist/miniproject2frontend/browser src/main/resources/static
 
 # Build the application
 RUN mvn package -Dmaven.test.skip=true

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WebSocketService } from '../../service/websocket.service';
 import { Subscription } from 'rxjs';
-import * as Phaser from 'phaser';
+// import * as Phaser from 'phaser';
 import { AdminService } from '../../service/admin.service';
 
 @Component({
@@ -16,7 +16,7 @@ export class GameLobbyComponent implements OnInit, OnDestroy {
   players: any[] = [];
   private subscription: Subscription | undefined;
   playerName !: string;
-  game !: Phaser.Game;
+  // game !: Phaser.Game;
   isAdmin: boolean = false;
 
 
@@ -54,32 +54,32 @@ export class GameLobbyComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.game = new Phaser.Game({
-      scene: {
-        preload: this.preload.bind(this),
-        create: this.create.bind(this)
-      }
-    });
+  //   this.game = new Phaser.Game({
+  //     scene: {
+  //       preload: this.preload.bind(this),
+  //       create: this.create.bind(this)
+  //     }
+  //   });
   }
 
   ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+  //   if (this.subscription) {
+  //     this.subscription.unsubscribe();
+  //   }
   }
 
-  preload() {
-    this.game.scene.scenes[0].load.audio('startaudio', 'assets/startaudio.wav');
-  }  
+  // preload() {
+  //   this.game.scene.scenes[0].load.audio('startaudio', 'assets/startaudio.wav');
+  // }  
 
-  create() {}
+  // create() {}
 
   start(): void {
-    const buttonSound = this.game.sound.add('startaudio');
-    buttonSound.play();
-    console.log("Start button clicked");
-    console.log("Routing to the next page...");
-    console.log("Game code:", this.gameCode);
+    // const buttonSound = this.game.sound.add('startaudio');
+    // buttonSound.play();
+    // console.log("Start button clicked");
+    // console.log("Routing to the next page...");
+    // console.log("Game code:", this.gameCode);
     this.webSocketService.sendStartEvent(this.gameCode);
   }
 }

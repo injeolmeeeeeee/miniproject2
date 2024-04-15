@@ -17,7 +17,6 @@ import { ResultsComponent } from './components/results/results.component';
 import { PlayerService } from './service/player.service';
 import { QuestionStore } from './question.store';
 import { GoogleSigninComponent } from './components/google-signin/google-signin.component';
-import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -34,10 +33,9 @@ import { RouterModule } from '@angular/router';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    RouterModule,
     HttpClientModule,
     FormsModule,
-    // SocialLoginModule
+    SocialLoginModule
   ],
   providers: [
     PlayerService,
