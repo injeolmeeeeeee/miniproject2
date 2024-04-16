@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { QuestionStore } from '../question.store';
+import { environment } from '../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,7 @@ export class WebSocketService {
     this.playerName = playerName;
     if ("WebSocket" in window) {
       console.log("Connecting...");
-      let url = "ws://localhost:8080/websocket-server";
+      let url = "wss:/wrns.up.railway.app/websocket-server";
       console.log("Connect to " + url);
       this.ws = new WebSocket(`${url}?gameCode=${gameCode}`);
       this.ws.onopen = () => this.onWebSocketOpen();

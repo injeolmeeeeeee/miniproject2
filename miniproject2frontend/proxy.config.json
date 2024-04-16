@@ -1,6 +1,6 @@
 {
     "/api": {
-      "target": "http://wrns.up.railway.app/",
+      "target": "https://wrns.up.railway.app/",
       "secure": false
     }
   }

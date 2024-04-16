@@ -7,7 +7,7 @@ import { Observable, catchError } from 'rxjs';
   providedIn: 'root'
 })
 export class PlayerService {
-  private apiUrl = 'http://localhost:8080/api/';
+  private apiUrl = 'https://wrns.up.railway.app/api/';
 
 
   constructor(private http: HttpClient) { }

@@ -8,7 +8,7 @@ import { Game } from '../models';
 })
 export class GameCodeService {
 
-  apiUrl = 'http://localhost:8080/api/';
+  apiUrl = 'https://wrns.up.railway.app/api/';
 
   constructor(private http: HttpClient) { }
 
