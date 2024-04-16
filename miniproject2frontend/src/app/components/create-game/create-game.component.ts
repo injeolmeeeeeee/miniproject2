@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-// import { SocialAuthService, } from '@abacritt/angularx-social-login';npm 
+import { SocialAuthService, } from '@abacritt/angularx-social-login';
 import { GameCodeService } from '../../service/game-code.service';
 import { Router } from '@angular/router';
 import { Game } from '../../models';
@@ -21,7 +21,7 @@ export class CreateGameComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    // private authService: SocialAuthService,
+    private authService: SocialAuthService,
     private gameCodeService: GameCodeService,
     private router: Router,
     private adminService: AdminService
@@ -73,13 +73,13 @@ export class CreateGameComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // this.authSubscription.unsubscribe();
+    this.authSubscription.unsubscribe();
   }
 
   ngOnInit() {
-    // this.authSubscription = this.authService.authState.subscribe((user) => {
-    //   console.log('user', user);
-    // });
+    this.authSubscription = this.authService.authState.subscribe((user) => {
+      console.log('user', user);
+    });
   }
 
   googleSignin(googleWrapper: any) {

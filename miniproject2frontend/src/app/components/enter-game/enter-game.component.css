@@ -1,5 +1,12 @@
-html, body {
-    background-color: #c10016 !important;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    background-color: #c10016;
     font-family: Helvetica, Arial, sans-serif;
     color: #ffffff;
     text-align: center;
@@ -14,20 +21,18 @@ html, body {
 
 h1 {
     font-size: 48px;
-    color: #ffffff;
     font-weight: bold;
 }
 
 h2 {
     margin-bottom: 10px;
-    color: #ffffff;
     font-weight: bold;
 }
 
 button {
     color: #ffffff;
     background-color: #c10016;
-    border: 1px solid rgb(255, 255, 255);
+    border: 1px solid #ffffff;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
@@ -36,4 +41,95 @@ button {
 
 button:hover {
     background-color: #a30012;
+}
+
+.card {
+    width: 400px;
+    background-color: white;
+    border: 1px solid #dee2e6;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    text-align: center;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-answer-container {
+    display: flex;
+    justify-content: center;
+}
+
+.card-answer {
+    width: 300px;
+    background-color: white;
+    border: 1px solid #dee2e6;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px 10px;
+    text-align: center;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.card-answer-name {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #c10016;
+    font-weight: bold;
+}
+
+.card-answer-body {
+    font-size: 15px;
+    margin-bottom: 10px;
+    color: #c10016;
+}
+
+.card-text {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #c10016;
+    font-weight: bold;
+}
+
+.card.selected {
+    background-color: #c10016;
+    color: #ffffff;
+}
+
+.card:hover {
+    box-shadow: 0 4px 8px rgba(3, 172, 167, 0.1);
+}
+
+.error-message {
+    background-color: white;
+    border: 1px solid #dee2e6;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 14px;
+    max-width: 300px;
+    padding: 10px 20px;
+    font-weight: bold;
+    color: #c10016;
+}
+
+.card-footer {
+    font-size: 12px;
+    color: #c10016;
+    margin-top: 20px;
+}
+
+p {
+    color: #ffffff;
+}
+
+.normal-case {
+    text-transform: none;
 }

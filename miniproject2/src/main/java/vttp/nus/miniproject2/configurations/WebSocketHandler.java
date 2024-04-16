@@ -120,9 +120,22 @@ public class WebSocketHandler extends TextWebSocketHandler {
         Player player = (Player) session.getAttributes().get("player");
         if (player != null) {
             gameSessions.computeIfAbsent(gameId, key -> new ArrayList<>()).add(player);
-            send(session);
+            sendEnd(session);
         } else {
             logger.warn("No player associated with the session");
+        }
+    }
+
+    private void sendEnd(WebSocketSession session) {
+        String gameId = extractGameIdFromURI(session.getUri());
+        try {
+            List<Player> players = playerService.getPlayersInGameLobby(gameId);
+            String jsonString = objectMapper.writeValueAsString(players);
+            System.out.println("Serialized JSON: " + jsonString); 
+            String message = "{\"type\": \"end\", \"content\": " + jsonString + "}";
+            broadcastMessage(message);
+        } catch (JsonProcessingException e) {
+            logger.error("Error sending updated player list: {}", e.getMessage());
         }
     }
 

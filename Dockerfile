@@ -11,6 +11,7 @@ COPY miniproject2frontend/src src
 
 RUN npm ci && ng build
 
+
 # Starting with this Linux server
 FROM maven:3-eclipse-temurin-21 AS sb-builder
 

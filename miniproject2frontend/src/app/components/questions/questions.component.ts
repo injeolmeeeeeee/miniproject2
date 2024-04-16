@@ -85,9 +85,13 @@ export class QuestionsComponent implements OnInit {
     );
   }
   
-  
   calculateScore(): void {
     const words = this.userResponse.split(' ');
     this.score = words.filter(word => word.trim() !== '').length;
   }
+
+  quit() {
+    this.router.navigate(['/end']);
+  }
+
 }

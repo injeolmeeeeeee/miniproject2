@@ -48,8 +48,8 @@ export class WebSocketService {
   private onReceive(event: MessageEvent<any>): void {
     try {
       let receivedMsg = JSON.parse(event.data);
-      console.log('Received message type:', receivedMsg.type);
-      console.log('Received message:', receivedMsg);
+      // console.log('Received message type:', receivedMsg.type);
+      // console.log('Received message:', receivedMsg);
 
         if (receivedMsg.type === 'questions') {
           this.handleQuestions(receivedMsg.content);
@@ -96,7 +96,6 @@ export class WebSocketService {
     this.router.navigate(['/game', gameCode, playerName]);
   }
 
-
   public handleEnd(gameId: string): void {
     this.router.navigate(['/end']);
   }
@@ -132,7 +131,7 @@ export class WebSocketService {
     this.send(gameId, startEvent);
   }
 
-  public sendNextQuestionEvent(gameId: string, playerName: string): void {
+  public sendNextQuestionEvent(gameId: string): void {
     const newRound = 'new_round';
     this.send(gameId, newRound);
   }

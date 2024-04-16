@@ -16,7 +16,7 @@ import vttp.nus.miniproject2.services.GameService;
 import vttp.nus.miniproject2.services.PlayerService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RequestMapping("/api")
 public class GameController {
 

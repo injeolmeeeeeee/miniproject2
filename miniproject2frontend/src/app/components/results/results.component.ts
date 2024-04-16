@@ -19,6 +19,7 @@ export class ResultsComponent implements OnInit, OnDestroy {
   currentRound!: number;
   isAdmin: boolean = false;
   currentQuestion!: Question;
+  isWebSocketConnected: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -41,6 +42,12 @@ export class ResultsComponent implements OnInit, OnDestroy {
       this.playerName = params.get('playerName') || '';
       if (this.gameCode) {
         this.webSocketService.connect(this.gameCode, this.playerName);
+        
+        this.webSocketService.onConnected().subscribe(connected => {
+          console.log('WebSocket connection status:', connected);
+          this.isWebSocketConnected = connected;
+        });
+
         this.webSocketService.getReceivedMessages().subscribe(message => {
           console.log('Received messages:', message);
           this.players = [];
@@ -68,9 +75,19 @@ export class ResultsComponent implements OnInit, OnDestroy {
     }
   }
 
+  goToEnd(): void {
+    console.log('Attempting to call goToEnd()');
+    if (this.isWebSocketConnected) {
+      console.log('WebSocket connection is open. Sending "end" message...');
+      this.webSocketService.sendEnd(this.gameCode);
+    } else {
+      console.error("WebSocket connection is not open.");
+    }
+  }  
+
   redirectToQuestions(): void {
     this.deleteDisplayedQuestion()
-    this.webSocketService.sendNextQuestionEvent(this.gameCode, this.playerName);
+    this.webSocketService.sendNextQuestionEvent(this.gameCode);
   }
   
   deleteDisplayedQuestion(): void {
@@ -85,8 +102,8 @@ export class ResultsComponent implements OnInit, OnDestroy {
     }
   }
   
-
-  goToEnd(): void {
-    this.webSocketService.sendEnd(this.gameCode);
+  quit() {
+    this.router.navigate(['/end']);
   }
+  
 }
