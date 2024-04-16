@@ -73,7 +73,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
                     handleNewRoundEntered(gameId);
                     break;
                 case "end":
-                    handleResponseEvent(session, gameId);
+                    handleEndEvent(session, gameId);
                     break;
                 default:
                     logger.warn("Received unrecognized message content: {}", messageContent);
@@ -117,6 +117,16 @@ public class WebSocketHandler extends TextWebSocketHandler {
     }
 
     private void handleResponseEvent(WebSocketSession session, String gameId) throws JsonProcessingException {
+        Player player = (Player) session.getAttributes().get("player");
+        if (player != null) {
+            gameSessions.computeIfAbsent(gameId, key -> new ArrayList<>()).add(player);
+            send(session);
+        } else {
+            logger.warn("No player associated with the session");
+        }
+    }
+
+    private void handleEndEvent(WebSocketSession session, String gameId) throws JsonProcessingException {
         Player player = (Player) session.getAttributes().get("player");
         if (player != null) {
             gameSessions.computeIfAbsent(gameId, key -> new ArrayList<>()).add(player);

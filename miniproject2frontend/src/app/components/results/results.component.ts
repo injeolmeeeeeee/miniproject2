@@ -27,7 +27,7 @@ export class ResultsComponent implements OnInit, OnDestroy {
     private webSocketService: WebSocketService,
     private adminSvc: AdminService,
     private questionStore: QuestionStore
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.isAdmin = this.adminSvc.isAdmin;
@@ -36,13 +36,13 @@ export class ResultsComponent implements OnInit, OnDestroy {
       const questionString = params['question'];
       this.currentQuestion = JSON.parse(questionString);
     });
-    
+
     this.route.paramMap.subscribe(params => {
       this.gameCode = params.get('gameId') || '';
       this.playerName = params.get('playerName') || '';
       if (this.gameCode) {
         this.webSocketService.connect(this.gameCode, this.playerName);
-        
+
         this.webSocketService.onConnected().subscribe(connected => {
           console.log('WebSocket connection status:', connected);
           this.isWebSocketConnected = connected;
@@ -66,7 +66,7 @@ export class ResultsComponent implements OnInit, OnDestroy {
       } else {
         console.error("Game id is empty.");
       }
-    });    
+    });
   }
 
   ngOnDestroy(): void {
@@ -76,20 +76,14 @@ export class ResultsComponent implements OnInit, OnDestroy {
   }
 
   goToEnd(): void {
-    console.log('Attempting to call goToEnd()');
-    if (this.isWebSocketConnected) {
-      console.log('WebSocket connection is open. Sending "end" message...');
-      this.webSocketService.sendEnd(this.gameCode);
-    } else {
-      console.error("WebSocket connection is not open.");
-    }
-  }  
+    this.webSocketService.sendEnd(this.gameCode);
+  }
 
   redirectToQuestions(): void {
     this.deleteDisplayedQuestion()
     this.webSocketService.sendNextQuestionEvent(this.gameCode);
   }
-  
+
   deleteDisplayedQuestion(): void {
     if (this.currentQuestion) {
       this.questionStore.deleteQuestion(this.currentQuestion.id)
@@ -101,9 +95,9 @@ export class ResultsComponent implements OnInit, OnDestroy {
         });
     }
   }
-  
+
   quit() {
     this.router.navigate(['/end']);
   }
-  
+
 }
