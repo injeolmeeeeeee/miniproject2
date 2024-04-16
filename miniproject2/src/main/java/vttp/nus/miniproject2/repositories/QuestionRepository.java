@@ -35,7 +35,7 @@ public class QuestionRepository {
                 (rs, rowNum) -> {
                     Question question = new Question();
                     question.setId(rs.getLong("id"));
-                    question.setQuestionNumber(rs.getInt("question_number")); // Set question_number
+                    question.setQuestionNumber(rs.getInt("question_number")); 
                     question.setQuestionText(rs.getString("question_text"));
                     question.setCategory(rs.getString("category"));
                     question.setEdition(rs.getString("edition"));
@@ -46,7 +46,7 @@ public class QuestionRepository {
 
         System.out.println("(QuestionRepository) Retrieved " + questions.size() + " questions for edition " + edition);
 
-        return questions; // Return the list of questions
+        return questions;
     }
 
     public String getEditionByGameId(String gameId) throws JsonProcessingException {

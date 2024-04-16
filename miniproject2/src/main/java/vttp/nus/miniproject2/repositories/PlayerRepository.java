@@ -43,68 +43,64 @@ public class PlayerRepository {
     }
 
     @SuppressWarnings("unchecked")
-public void savePlayerResponses(String gameId, Player player) {
-    logger.info("(PlayerRepo) savePlayerResponses gameId: " + gameId);
-    HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
+    public void savePlayerResponses(String gameId, Player player) {
+        logger.info("(PlayerRepo) savePlayerResponses gameId: " + gameId);
+        HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
 
-    try {
-        String gameDataString = hashOperations.get(gameId, "players");
-        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String gameDataString = hashOperations.get(gameId, "players");
+            ObjectMapper objectMapper = new ObjectMapper();
 
-        List<Map<String, Object>> players;
-        if (gameDataString != null && !gameDataString.isEmpty()) {
-            players = objectMapper.readValue(gameDataString, new TypeReference<List<Map<String, Object>>>() {});
-        } else {
-            players = new ArrayList<>();
-        }
-
-        boolean playerFound = false;
-        for (Map<String, Object> playerData : players) {
-            String playerName = (String) playerData.get("name");
-            if (playerName.equals(player.getName())) {
-                List<String> responseStrings = (List<String>) playerData.get("responses");
-                Integer score = (Integer) playerData.get("score");
-
-                if (responseStrings == null) {
-                    responseStrings = new ArrayList<>();
-                    playerData.put("responses", responseStrings);
-                }
-
-                // Add response to the list
-                responseStrings.addAll(player.getResponses());
-
-                // Update score
-                if (score == null) {
-                    score = 0;
-                }
-                score += player.getScore(); //line 77
-
-                // Update player data
-                playerData.put("responses", responseStrings);
-                playerData.put("score", score);
-
-                playerFound = true;
-                break; // Exit loop once player is found
+            List<Map<String, Object>> players;
+            if (gameDataString != null && !gameDataString.isEmpty()) {
+                players = objectMapper.readValue(gameDataString, new TypeReference<List<Map<String, Object>>>() {
+                });
+            } else {
+                players = new ArrayList<>();
             }
-        }
 
-        if (!playerFound) {
-            // If player not found, create a new player entry
-            Map<String, Object> newPlayerData = new HashMap<>();
-            newPlayerData.put("name", player.getName());
-            newPlayerData.put("responses", player.getResponses());
-            newPlayerData.put("score", player.getScore());
-            players.add(newPlayerData);
-        }
+            boolean playerFound = false;
+            for (Map<String, Object> playerData : players) {
+                String playerName = (String) playerData.get("name");
+                if (playerName.equals(player.getName())) {
+                    List<String> responseStrings = (List<String>) playerData.get("responses");
+                    Integer score = (Integer) playerData.get("score");
 
-        String updatedGameDataString = objectMapper.writeValueAsString(players);
-        hashOperations.put(gameId, "players", updatedGameDataString);
-        logger.info("Updated game data for game {}: {}", gameId, updatedGameDataString);
-    } catch (IOException e) {
-        logger.error("Error reading or updating game data", e);
+                    if (responseStrings == null) {
+                        responseStrings = new ArrayList<>();
+                        playerData.put("responses", responseStrings);
+                    }
+
+                    responseStrings.addAll(player.getResponses());
+
+                    if (score == null) {
+                        score = 0;
+                    }
+                    score += player.getScore();
+
+                    playerData.put("responses", responseStrings);
+                    playerData.put("score", score);
+
+                    playerFound = true;
+                    break;
+                }
+            }
+
+            if (!playerFound) {
+                Map<String, Object> newPlayerData = new HashMap<>();
+                newPlayerData.put("name", player.getName());
+                newPlayerData.put("responses", player.getResponses());
+                newPlayerData.put("score", player.getScore());
+                players.add(newPlayerData);
+            }
+
+            String updatedGameDataString = objectMapper.writeValueAsString(players);
+            hashOperations.put(gameId, "players", updatedGameDataString);
+            logger.info("Updated game data for game {}: {}", gameId, updatedGameDataString);
+        } catch (IOException e) {
+            logger.error("Error reading or updating game data", e);
+        }
     }
-}
-
 
     public void addPlayerToGame(String gameId, Player player) throws JsonProcessingException {
         HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
@@ -124,39 +120,34 @@ public void savePlayerResponses(String gameId, Player player) {
     }
 
     @SuppressWarnings("unchecked")
-public List<Player> getAllPlayers(String gameId) {
-    HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
-    String playersJson = hashOperations.get(gameId, "players");
+    public List<Player> getAllPlayers(String gameId) {
+        HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
+        String playersJson = hashOperations.get(gameId, "players");
 
-    List<Player> players = new ArrayList<>();
-    if (playersJson != null) {
-        try {
-            List<Map<String, Object>> playersList = objectMapper.readValue(playersJson,
-                    new TypeReference<List<Map<String, Object>>>() {
-                    });
-            for (Map<String, Object> playerMap : playersList) {
-                Player player = new Player();
-                player.setName((String) playerMap.get("name"));
-                
-                // Set score
-                Integer score = (Integer) playerMap.get("score");
-                player.setScore(score != null ? score : 0);
+        List<Player> players = new ArrayList<>();
+        if (playersJson != null) {
+            try {
+                List<Map<String, Object>> playersList = objectMapper.readValue(playersJson,
+                        new TypeReference<List<Map<String, Object>>>() {
+                        });
+                for (Map<String, Object> playerMap : playersList) {
+                    Player player = new Player();
+                    player.setName((String) playerMap.get("name"));
 
-                // Set responses
-                List<String> responseStrings = (List<String>) playerMap.get("responses");
-                player.setResponses(responseStrings != null ? responseStrings : new ArrayList<>());
+                    Integer score = (Integer) playerMap.get("score");
+                    player.setScore(score != null ? score : 0);
 
-                players.add(player);
+                    List<String> responseStrings = (List<String>) playerMap.get("responses");
+                    player.setResponses(responseStrings != null ? responseStrings : new ArrayList<>());
+
+                    players.add(player);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        return players;
     }
-    return players;
-}
-
-
-
 
     public void updatePlayerList(String gameId, List<Player> players) throws JsonProcessingException {
         HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();

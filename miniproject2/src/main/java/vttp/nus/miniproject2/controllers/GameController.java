@@ -26,7 +26,7 @@ public class GameController {
     @Autowired
     private PlayerService playerService;
 
-     @Autowired
+    @Autowired
     private HttpSession httpSession;
 
     private static final Logger logger = LoggerFactory.getLogger(GameController.class);
@@ -54,34 +54,32 @@ public class GameController {
     }
 
     @PostMapping("/game-lobby/{gameId}/players")
-public ResponseEntity<Player> addPlayerToGameLobby(@PathVariable String gameId, @RequestBody String playerJson) {
-    try {
-        logger.info("Received request to add player to game lobby. Game ID: {}", gameId);
+    public ResponseEntity<Player> addPlayerToGameLobby(@PathVariable String gameId, @RequestBody String playerJson) {
+        try {
+            logger.info("Received request to add player to game lobby. Game ID: {}", gameId);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        Player newPlayer = objectMapper.readValue(playerJson, Player.class);
+            ObjectMapper objectMapper = new ObjectMapper();
+            Player newPlayer = objectMapper.readValue(playerJson, Player.class);
 
-        logger.info("Received player details: {}", newPlayer);
+            logger.info("Received player details: {}", newPlayer);
 
-        if (!gameService.doesGameExist(gameId)) {
-            logger.error("Game not found with ID: {}", gameId);
-            return ResponseEntity.notFound().build();
+            if (!gameService.doesGameExist(gameId)) {
+                logger.error("Game not found with ID: {}", gameId);
+                return ResponseEntity.notFound().build();
+            }
+
+            playerService.addPlayerToGameLobby(gameId, newPlayer);
+            httpSession.setAttribute("player", newPlayer);
+
+            logger.info("Player added to game lobby successfully. Player: {}", newPlayer);
+            logger.info("Player stored in session: {}", httpSession.getAttribute("player"));
+
+            return ResponseEntity.ok(newPlayer);
+        } catch (Exception e) {
+            logger.error("Error occurred while adding player to game lobby. Game ID: {}", gameId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
-        playerService.addPlayerToGameLobby(gameId, newPlayer);
-        httpSession.setAttribute("player", newPlayer); // Here you set the player in the session
-
-        logger.info("Player added to game lobby successfully. Player: {}", newPlayer);
-        
-        // Log player information stored in session
-        logger.info("Player stored in session: {}", httpSession.getAttribute("player"));
-
-        return ResponseEntity.ok(newPlayer);
-    } catch (Exception e) {
-        logger.error("Error occurred while adding player to game lobby. Game ID: {}", gameId, e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-}
 
     @GetMapping("/checkPlayerNameExists")
     public ResponseEntity<Boolean> checkPlayerNameExists(@RequestParam String name, @RequestParam String gameId) {
