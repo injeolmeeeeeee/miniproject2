@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { WebSocketService } from '../../service/websocket.service';
 import { GameCodeService } from '../../service/game-code.service';
 import { Player } from '../../models';
+import { AdminService } from '../../service/admin.service';
 
 @Component({
   selector: 'app-ending',
@@ -20,10 +21,12 @@ export class EndingComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private webSocketService: WebSocketService,
-    private gameSvc : GameCodeService
+    private gameSvc : GameCodeService,
+    private adminSvc: AdminService
   ) { }
 
   ngOnInit(): void {
+    this.isAdmin = this.adminSvc.isAdmin;
     this.route.paramMap.subscribe(params => {
       this.gameCode = params.get('gameId') || '';
       if (this.gameCode) {
