@@ -25,7 +25,7 @@
 <br>
 <br>
 
-<button href="#" onclick="signOut();">Sign out</button>
+<button href="#" *ngIf="isAdmin" onclick="signOut();">Sign out</button>
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <script>
 </script>
